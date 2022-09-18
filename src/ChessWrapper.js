@@ -1,9 +1,36 @@
 import React from 'react'
-import Chess from "chess.js"
-
+import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
 
-export class ChessWrapper extends React.Component {
+class ChessWrapper extends React.Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			game: new Chess(),
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+		}
+
+
+	}
+
+	componentDidMount() {
+		console.log('mount')
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		console.log('update', prevProps, prevState)
+		console.log(this.state.game.history())
+	}
+
+	componentWillUnmount(prevProps, prevState) {
+		console.log('unmount')
+	}
+
+	componentDidCatch(error, info) {
+		console.log('error')
+	}
+
 	render() {
 		return (
 			<>
@@ -12,17 +39,25 @@ export class ChessWrapper extends React.Component {
 
 
 
-
 						{/* Black info */}
 						<div style={{ border: "dotted" }} className="col-sm-8">
 							<span>Black Info Container</span>
 						</div>
+						{/* Empty Space */}
 						<div style={{ border: "dotted" }} className="col-sm-4"></div>
 
 
 						{/* Chess Board */}
 						<div style={{ border: "dotted" }} className="col-sm-8">
-							<Chessboard id="BasicBoard" />
+							<Chessboard 
+								id="BasicBoard" 
+								position={this.state.fen}
+								showBoardNotation={true}
+								onPieceClick={piece => this.handlePieceClick(piece) }
+								onPieceDrop={(sourceSquare, targetSquare, piece) => {
+									return this.handlePieceDrop(sourceSquare, targetSquare, piece)}
+								}
+							/>
 						</div>
 
 						{/* Chess Notations */}
@@ -34,12 +69,13 @@ export class ChessWrapper extends React.Component {
 						<div style={{ border: "dotted" }}  className="col-sm-8">
 							<span>White Info Container</span>
 						</div>
+						{/* Empty Space */}
 						<div style={{ border: "dotted" }}  className="col-sm-4"></div>
 
+						{/* Game List */}
 						<div style={{ border: "dotted" }}  className="col-sm-12">
-							<span>Games</span>
+							<span>Game List</span>
 						</div>
-
 
 
 
@@ -47,6 +83,25 @@ export class ChessWrapper extends React.Component {
 				</div>
 			</>
 		)
+	}
+
+	handlePieceClick = (piece) => {
+		console.log('handlePieceClick() ', piece)
+	}
+
+	handlePieceDrop = (sourceSquare, targetSquare, piece) => {
+		let moved = this.state.game.move({ 
+			from: sourceSquare, 
+			to: targetSquare
+		})
+
+		if (!moved) {
+			// console.log('Invalid Move: ', moved)
+			return false
+		}
+		// console.log("Move: ", moved)
+		this.setState({fen: this.state.game.fen()})
+		return true
 	}
 }
 
