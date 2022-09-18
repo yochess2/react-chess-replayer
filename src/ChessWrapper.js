@@ -2,36 +2,41 @@ import React from 'react'
 import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
 
+import Notations from "./Notations"
+
 class ChessWrapper extends React.Component {
 	constructor(props) {
+		console.log('ChessWrapper - constructor')
 		super(props)
 
 		this.state = {
 			game: new Chess(),
-			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			last_move_was_legal: null
 		}
 
 
 	}
 
 	componentDidMount() {
-		console.log('mount')
+		console.log('ChessWrapper - ComponentDidMount')
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		console.log('update', prevProps, prevState)
+		console.log('ChessWrapper - ComponentDidUpdate', prevProps, prevState)
 		console.log(this.state.game.history())
 	}
 
 	componentWillUnmount(prevProps, prevState) {
-		console.log('unmount')
+		console.log('ChessWrapper - ComponentWillUnmount')
 	}
 
 	componentDidCatch(error, info) {
-		console.log('error')
+		console.log('ChessWrapper - ComponentDidCatch')
 	}
 
 	render() {
+		console.log("ChessWrapper - render")
 		return (
 			<>
 				<div style={{ border: "solid" }} className="container bg-secondary">
@@ -41,7 +46,7 @@ class ChessWrapper extends React.Component {
 
 						{/* Black info */}
 						<div style={{ border: "dotted" }} className="col-sm-8">
-							<span>Black Info Container</span>
+							<h2>Black Info Container</h2>
 						</div>
 						{/* Empty Space */}
 						<div style={{ border: "dotted" }} className="col-sm-4"></div>
@@ -53,7 +58,6 @@ class ChessWrapper extends React.Component {
 								id="BasicBoard" 
 								position={this.state.fen}
 								showBoardNotation={true}
-								onPieceClick={piece => this.handlePieceClick(piece) }
 								onPieceDrop={(sourceSquare, targetSquare, piece) => {
 									return this.handlePieceDrop(sourceSquare, targetSquare, piece)}
 								}
@@ -62,19 +66,20 @@ class ChessWrapper extends React.Component {
 
 						{/* Chess Notations */}
 						<div style={{ border: "dotted" }} className="col-sm-4">
-							<span>Chess Notations</span>
+							<h2>Notations</h2>
+							<Notations history={this.state.game.history()}/>
 						</div>
 
 						{/* White info */}
 						<div style={{ border: "dotted" }}  className="col-sm-8">
-							<span>White Info Container</span>
+							<h2>White Info Container</h2>
 						</div>
 						{/* Empty Space */}
 						<div style={{ border: "dotted" }}  className="col-sm-4"></div>
 
 						{/* Game List */}
 						<div style={{ border: "dotted" }}  className="col-sm-12">
-							<span>Game List</span>
+							<h2>Game List</h2>
 						</div>
 
 
@@ -83,10 +88,6 @@ class ChessWrapper extends React.Component {
 				</div>
 			</>
 		)
-	}
-
-	handlePieceClick = (piece) => {
-		console.log('handlePieceClick() ', piece)
 	}
 
 	handlePieceDrop = (sourceSquare, targetSquare, piece) => {

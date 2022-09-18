@@ -3,7 +3,7 @@
 // Future version will be React 18, and functional components
 
 // Note to self, ctrl+shift+p, and type jsx
-// rce for class components
+// rcc for class components
 // rafce for functional components
 
 import React from "react"
