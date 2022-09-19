@@ -1,42 +1,37 @@
 import React from 'react'
-import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
 
 import Notations from "./Notations"
 
 class ChessWrapper extends React.Component {
 	constructor(props) {
-		console.log('ChessWrapper - constructor')
 		super(props)
+		console.log('ChessWrapper - constructor', props)
 
 		this.state = {
-			game: new Chess(),
-			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			last_move_was_legal: null
+			fen: props.game.fen(),
+			history: props.game.history(),
 		}
-
-
 	}
 
-	componentDidMount() {
-		console.log('ChessWrapper - ComponentDidMount')
-	}
+	// componentDidMount() {
+	// 	console.log('ChessWrapper - ComponentDidMount')
+	// }
 
-	componentDidUpdate(prevProps, prevState) {
-		console.log('ChessWrapper - ComponentDidUpdate', prevProps, prevState)
-		console.log(this.state.game.history())
-	}
+	// componentDidUpdate(prevProps, prevState) {
+	// 	console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
+	// }
 
-	componentWillUnmount(prevProps, prevState) {
-		console.log('ChessWrapper - ComponentWillUnmount')
-	}
+	// componentWillUnmount(prevProps, prevState) {
+	// 	console.log('ChessWrapper - ComponentWillUnmount')
+	// }
 
-	componentDidCatch(error, info) {
-		console.log('ChessWrapper - ComponentDidCatch')
-	}
+	// componentDidCatch(error, info) {
+	// 	console.log('ChessWrapper - ComponentDidCatch')
+	// }
 
 	render() {
-		console.log("ChessWrapper - render")
+		console.log("ChessWrapper - render", this.state.history)
 		return (
 			<>
 				<div style={{ border: "solid" }} className="container bg-secondary">
@@ -67,7 +62,7 @@ class ChessWrapper extends React.Component {
 						{/* Chess Notations */}
 						<div style={{ border: "dotted" }} className="col-sm-4">
 							<h2>Notations</h2>
-							<Notations history={this.state.game.history()}/>
+							<Notations history={this.state.history}/>
 						</div>
 
 						{/* White info */}
@@ -90,18 +85,21 @@ class ChessWrapper extends React.Component {
 		)
 	}
 
+	//When user drops a piece, the move gets input into the chess instance
+	//  if the chess instance says the move is illegal then nothing happens
+	//  else the chess instance gets updated and fen's state changes 
+	//Returns: a value of true or false as required by the chessboard instance
 	handlePieceDrop = (sourceSquare, targetSquare, piece) => {
-		let moved = this.state.game.move({ 
+		let moved = this.props.game.move({
 			from: sourceSquare, 
 			to: targetSquare
 		})
-
-		if (!moved) {
-			// console.log('Invalid Move: ', moved)
+		if (!moved)
 			return false
-		}
-		// console.log("Move: ", moved)
-		this.setState({fen: this.state.game.fen()})
+		this.setState({
+			fen: this.props.game.fen(),
+			history: this.props.game.history()
+		})
 		return true
 	}
 }
