@@ -1,16 +1,18 @@
 import React from 'react'
+import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
 
+// import ChessboardWrapper from "./ChessboardWrapper"
 import Notations from "./Notations"
 
 class ChessWrapper extends React.Component {
 	constructor(props) {
 		super(props)
-		console.log('ChessWrapper - constructor', props)
-
+		// console.log('ChessWrapper - constructor', props)
 		this.state = {
-			fen: props.game.fen(),
-			history: props.game.history(),
+			game: new Chess(),
+			fen: "start",
+			history: [],
 		}
 	}
 
@@ -18,9 +20,9 @@ class ChessWrapper extends React.Component {
 	// 	console.log('ChessWrapper - ComponentDidMount')
 	// }
 
-	// componentDidUpdate(prevProps, prevState) {
-	// 	console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
-	// }
+	componentDidUpdate(prevProps, prevState) {
+		console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
+	}
 
 	// componentWillUnmount(prevProps, prevState) {
 	// 	console.log('ChessWrapper - ComponentWillUnmount')
@@ -31,7 +33,7 @@ class ChessWrapper extends React.Component {
 	// }
 
 	render() {
-		console.log("ChessWrapper - render", this.state.history)
+		// console.log("ChessWrapper - render", this.state.game.fen())
 		return (
 			<>
 				<div style={{ border: "solid" }} className="container bg-secondary">
@@ -53,16 +55,18 @@ class ChessWrapper extends React.Component {
 								id="BasicBoard" 
 								position={this.state.fen}
 								showBoardNotation={true}
-								onPieceDrop={(sourceSquare, targetSquare, piece) => {
-									return this.handlePieceDrop(sourceSquare, targetSquare, piece)}
-								}
-							/>
+								onPieceDrop={this.handlePieceDrop}
+								
+							/>	
 						</div>
 
 						{/* Chess Notations */}
 						<div style={{ border: "dotted" }} className="col-sm-4">
 							<h2>Notations</h2>
-							<Notations history={this.state.history}/>
+							<Notations 
+								history={this.state.history}
+								onMoveClick={this.handleMoveClick}
+							/>
 						</div>
 
 						{/* White info */}
@@ -89,18 +93,46 @@ class ChessWrapper extends React.Component {
 	//  if the chess instance says the move is illegal then nothing happens
 	//  else the chess instance gets updated and fen's state changes 
 	//Returns: a value of true or false as required by the chessboard instance
-	handlePieceDrop = (sourceSquare, targetSquare, piece) => {
-		let moved = this.props.game.move({
+	handlePieceDrop = (sourceSquare, targetSquare, piece) => {		
+		let history
+		let moved = this.state.game.move({
 			from: sourceSquare, 
 			to: targetSquare
 		})
-		if (!moved)
+
+		let currentHistory = this.state.game.history()
+		let notationHistory = this.state.history
+		let index = currentHistory.length-1
+
+		if (!moved) {
 			return false
+		}
+		if (currentHistory.length >= notationHistory.length) {
+			history = this.state.game.history()
+		} else {
+			if (currentHistory[index] === notationHistory[index]) {
+				history = this.state.history
+			} else {
+				history = this.state.game.history()
+			}
+		}
 		this.setState({
-			fen: this.props.game.fen(),
-			history: this.props.game.history()
+			fen: this.state.game.fen(),
+			history: history,
 		})
 		return true
+	}
+
+	//Method is invoked from Notations.onMoveClick()
+	//When invoked, it resets the game and board to that point in time,
+	//Notation is not affected
+	//Returns: Nothing
+	handleMoveClick = (moveNum) => {
+		this.state.game.reset()
+		for (let i=0;i<=moveNum;i++) {
+			this.state.game.move(this.state.history[i])
+		}
+		this.setState({ fen: this.state.game.fen() })
 	}
 }
 
