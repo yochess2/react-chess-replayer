@@ -94,7 +94,7 @@ class GameList extends React.Component {
 							<span 
 								className="hand-icon"
 								onClick={(event) => { this.onGameClick(event, index) }}>
-								Game {game.id} - {game.white.name || game.white.username} ({game.white.rating}) 
+								Game {index+1} - {game.white.name || game.white.username} ({game.white.rating}) 
 								vs. {game.black.name || game.black.username} ({game.black.rating})
 							</span>
 							</h4>

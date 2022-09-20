@@ -92,7 +92,7 @@ class ChessWrapper extends React.Component {
 						{/* White info */}
 						<div style={{ border: "dotted" }}  className="col-sm-8">
 							<h2>White Info Container</h2>
-							<h4>{this.state.white.name || this.state.black.username} ({this.state.white.rating})</h4>
+							<h4>{this.state.white.name || this.state.white.username} ({this.state.white.rating})</h4>
 						</div>
 
 						{/* Arrows */}

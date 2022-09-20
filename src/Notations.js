@@ -29,7 +29,7 @@ class Notations extends React.Component {
 	render() {
 		// console.log('    Notations - render', this.formatHistory(this.state.history))
 		return (
-			<div style={{ fontSize: '24px' }}>
+			<div style={{ fontSize: '24px', height: '520px', overflow: 'auto' }}>
 				<table>
 					<thead>
 						<tr>
