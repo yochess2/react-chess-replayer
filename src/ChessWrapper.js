@@ -12,14 +12,18 @@ import {
 import Notations from "./Notations"
 import GameList from "./GameList"
 
+import ChessWebAPI from 'chess-web-api'
+
 class ChessWrapper extends React.Component {
 	constructor(props) {
 		super(props)
 		// console.log('ChessWrapper - constructor', props)
 		this.state = {
 			game: new Chess(),
+			api: new ChessWebAPI(),
 			fen: "start",
 			history: [],
+			chesscomGames: [],
 			white: {
 				name: "White Player",
 				rating: null,
@@ -31,9 +35,16 @@ class ChessWrapper extends React.Component {
 		}
 	}
 
-	// componentDidMount() {
-	// 	console.log('ChessWrapper - ComponentDidMount')
-	// }
+	//FIGURE OUT how to make api calls and setstate them
+	componentDidMount() {
+		// this.state.api.getPlayerCompleteMonthlyArchives('tiger415', 2022, 9)
+		// 	.then((res) => {
+		// 		console.log('success!', res.body.games)
+		// 		this.setState(() => {
+		// 			return {chesscomGames: res.body.games}
+		// 		})
+		// 	})
+	}
 
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
@@ -98,28 +109,28 @@ class ChessWrapper extends React.Component {
 								<div className="col-sm-3" style={{ border: 'solid'}}>
 									<FaAngleDoubleLeft 
 										className="hand-icon" 
-										size="??"
+										size="5em"
 										onClick={this.handleDoubleLeftClick}
 									/>
 								</div>
 								<div className="col-sm-3" style={{ border: 'solid'}}>
 									<FaAngleLeft 
 										className="hand-icon" 
-										size="??"
+										size="5em"
 										onClick={this.handleLeftClick}
 									/>
 								</div>
 								<div className="col-sm-3" style={{ border: 'solid'}}>
 									<FaAngleRight 
 										className="hand-icon" 
-										size="??"
+										size="5em"
 										onClick={this.handleRightClick}
 									/>
 								</div>
 								<div className="col-sm-3" style={{ border: 'solid'}}>
 									<FaAngleDoubleRight 
 										className="hand-icon" 
-										size="??"
+										size="5em"
 										onClick={this.handleDoubleRightClick}
 									/>
 								</div>
@@ -131,6 +142,7 @@ class ChessWrapper extends React.Component {
 							<h2>Game List</h2>
 								<GameList 
 									onGameClick={this.handleGameClick}
+									gameList={this.state.gameList}
 								/>
 						</div>
 

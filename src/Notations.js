@@ -15,7 +15,7 @@ class Notations extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('    Notations - ComponentDidUpdate', prevProps, this.props)
-		console.log('    Notations - ComponentDidUpdate')
+		// console.log('    Notations - ComponentDidUpdate')
 	}
 
 	componentWillUnmount(prevProps, prevState) {
@@ -27,7 +27,7 @@ class Notations extends React.Component {
 	}
 
 	render() {
-		console.log('    Notations - render', this.formatHistory(this.state.history))
+		// console.log('    Notations - render', this.formatHistory(this.state.history))
 		return (
 			<div style={{ fontSize: '24px' }}>
 				<table>

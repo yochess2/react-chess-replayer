@@ -4,6 +4,7 @@ class GameList extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			chesscomGames: [],
 			games: [
 				{
 					id: 101,
@@ -53,7 +54,7 @@ class GameList extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		// console.log('    Game List - ComponentDidUpdate', prevState, this.state)
+		console.log('    Game List - ComponentDidUpdate', prevState, this.state)
 		console.log('    Game List - ComponentDidUpdate')
 	}
 
@@ -67,7 +68,7 @@ class GameList extends React.Component {
 
 
 	render() {
-		console.log('    Game List - render')
+		// console.log('    Game List - render')
 		return (
 			<>
 				{this.state.games.map((game, index) => {
