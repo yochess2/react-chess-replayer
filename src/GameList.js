@@ -1,9 +1,12 @@
 import React from 'react'
+import ChessWebAPI from 'chess-web-api'
+
 
 class GameList extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			api: new ChessWebAPI(),
 			chesscomGames: [],
 			games: [
 				{
@@ -11,10 +14,12 @@ class GameList extends React.Component {
 					fen: "rnbqk2r/pppp1Qpp/5n2/2b1p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4",
 					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5', 'Nf6', 'Qxf7'],
 					white: {
+						username: null,
 						name: "Drake W",
 						rating: 1054,
 					},
 					black: {
+						username: null,
 						name: "Alex S",
 						rating: 950,
 					},
@@ -24,10 +29,12 @@ class GameList extends React.Component {
 					fen: "rnbqk2r/pppp1ppp/5n2/2b1p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4",
 					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5', 'Nf6'],
 					white: {
+						username: null,
 						name: "Charles W",
 						rating: 1400
 					},
 					black: {
+						username: null,
 						name: "Lanisa W",
 						rating: 450,
 					},
@@ -37,10 +44,12 @@ class GameList extends React.Component {
 					fen: "rnbqk1nr/pppp1ppp/8/2b1p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 3 3",
 					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5'],
 					white: {
+						username: null,
 						name: "GM Karpov",
 						rating: 2650,
 					},
 					black: {
+						username: null,
 						name: "GM Kasparov",
 						rating: 2800,
 					},
@@ -51,10 +60,16 @@ class GameList extends React.Component {
 
 	componentDidMount() {
 		console.log('    Game List - ComponentDidMount')
+		this.state.api
+			.getPlayerCompleteMonthlyArchives('tiger415', 2022, 9)
+			.then((res) => {
+				console.log('        success!', res.body.games[0].rated)
+				this.setState({ chesscomGames: res.body.games })
+			})
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		console.log('    Game List - ComponentDidUpdate', prevState, this.state)
+		// console.log('    Game List - ComponentDidUpdate', prevState, this.state)
 		console.log('    Game List - ComponentDidUpdate')
 	}
 
@@ -71,7 +86,7 @@ class GameList extends React.Component {
 		// console.log('    Game List - render')
 		return (
 			<>
-				{this.state.games.map((game, index) => {
+				{this.state.chesscomGames.map((game, index) => {
 					return (
 						<div 
 							key={index}>
@@ -79,7 +94,8 @@ class GameList extends React.Component {
 							<span 
 								className="hand-icon"
 								onClick={(event) => { this.onGameClick(event, index) }}>
-								Game {game.id} - {game.white.name} ({game.white.rating}) vs. {game.black.name} ({game.black.rating})
+								Game {game.id} - {game.white.name || game.white.username} ({game.white.rating}) 
+								vs. {game.black.name || game.black.username} ({game.black.rating})
 							</span>
 							</h4>
 						</div>
@@ -90,7 +106,8 @@ class GameList extends React.Component {
 	}
 
 	onGameClick = (event, index) => {
-		let game = this.state.games[index]
+		let game = this.state.chesscomGames[index]
+		console.log(game)
 		this.props.onGameClick(game)
 	}
 }

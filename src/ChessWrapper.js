@@ -12,38 +12,30 @@ import {
 import Notations from "./Notations"
 import GameList from "./GameList"
 
-import ChessWebAPI from 'chess-web-api'
-
 class ChessWrapper extends React.Component {
 	constructor(props) {
 		super(props)
 		// console.log('ChessWrapper - constructor', props)
 		this.state = {
 			game: new Chess(),
-			api: new ChessWebAPI(),
 			fen: "start",
 			history: [],
 			chesscomGames: [],
 			white: {
 				name: "White Player",
+				username: null,
 				rating: null,
 			},
 			black: {
 				name: "Black Player",
+				username: null,
 				rating: null,
 			},
 		}
 	}
 
-	//FIGURE OUT how to make api calls and setstate them
 	componentDidMount() {
-		// this.state.api.getPlayerCompleteMonthlyArchives('tiger415', 2022, 9)
-		// 	.then((res) => {
-		// 		console.log('success!', res.body.games)
-		// 		this.setState(() => {
-		// 			return {chesscomGames: res.body.games}
-		// 		})
-		// 	})
+		// console.log("ChessWrapper - componentDidMount")
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -71,7 +63,7 @@ class ChessWrapper extends React.Component {
 						{/* Black info */}
 						<div style={{ border: "dotted" }} className="col-sm-8">
 							<h2>Black Info Container</h2>
-							<h4>{this.state.black.name} ({this.state.black.rating})</h4>
+							<h4>{this.state.black.name || this.state.black.username} ({this.state.black.rating})</h4>
 						</div>
 						{/* Empty Space */}
 						<div style={{ border: "dotted" }} className="col-sm-4"></div>
@@ -100,7 +92,7 @@ class ChessWrapper extends React.Component {
 						{/* White info */}
 						<div style={{ border: "dotted" }}  className="col-sm-8">
 							<h2>White Info Container</h2>
-							<h4>{this.state.white.name} ({this.state.white.rating})</h4>
+							<h4>{this.state.white.name || this.state.black.username} ({this.state.white.rating})</h4>
 						</div>
 
 						{/* Arrows */}
@@ -142,7 +134,7 @@ class ChessWrapper extends React.Component {
 							<h2>Game List</h2>
 								<GameList 
 									onGameClick={this.handleGameClick}
-									gameList={this.state.gameList}
+									chesscomGames={this.state.chesscomGames}
 								/>
 						</div>
 
@@ -204,12 +196,15 @@ class ChessWrapper extends React.Component {
 
 	handleGameClick = (game) => {
 		this.state.game.reset()
-		for (let i=0;i<game.history.length;i++) {
-			this.state.game.move(game.history[i])
-		}
+		let a = this.state.game.loadPgn(game.pgn)
+		console.log(this.state.game.history())
+
+		// for (let i=0;i<game.history.length;i++) {
+		// 	this.state.game.move(game.history[i])
+		// }
 		this.setState({ 
 			fen: game.fen,
-			history: game.history,
+			history: this.state.game.history(),
 			white: game.white,
 			black: game.black,
 		})
