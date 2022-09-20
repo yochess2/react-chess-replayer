@@ -1,6 +1,12 @@
 import React from 'react'
 import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
+import { 
+	FaAngleLeft,
+	FaAngleRight,
+	FaAngleDoubleLeft,
+	FaAngleDoubleRight 
+} from "react-icons/fa"
 
 // import ChessboardWrapper from "./ChessboardWrapper"
 import Notations from "./Notations"
@@ -85,8 +91,40 @@ class ChessWrapper extends React.Component {
 							<h2>White Info Container</h2>
 							<h4>{this.state.white.name} ({this.state.white.rating})</h4>
 						</div>
-						{/* Empty Space */}
-						<div style={{ border: "dotted" }}  className="col-sm-4"></div>
+
+						{/* Arrows */}
+						<div style={{ border: "dotted" }}  className="col-sm-4">
+							<div className="row">
+								<div className="col-sm-3" style={{ border: 'solid'}}>
+									<FaAngleDoubleLeft 
+										className="hand-icon" 
+										size="??"
+										onClick={this.handleDoubleLeftClick}
+									/>
+								</div>
+								<div className="col-sm-3" style={{ border: 'solid'}}>
+									<FaAngleLeft 
+										className="hand-icon" 
+										size="??"
+										onClick={this.handleLeftClick}
+									/>
+								</div>
+								<div className="col-sm-3" style={{ border: 'solid'}}>
+									<FaAngleRight 
+										className="hand-icon" 
+										size="??"
+										onClick={this.handleRightClick}
+									/>
+								</div>
+								<div className="col-sm-3" style={{ border: 'solid'}}>
+									<FaAngleDoubleRight 
+										className="hand-icon" 
+										size="??"
+										onClick={this.handleDoubleRightClick}
+									/>
+								</div>
+							</div>
+						</div>
 
 						{/* Game List */}
 						<div style={{ border: "dotted" }}  className="col-sm-12">
@@ -154,9 +192,7 @@ class ChessWrapper extends React.Component {
 
 	handleGameClick = (game) => {
 		this.state.game.reset()
-
-		console.log(game)
-		for (let i=0;i<game.history.length-1;i++) {
+		for (let i=0;i<game.history.length;i++) {
 			this.state.game.move(game.history[i])
 		}
 		this.setState({ 
@@ -165,6 +201,29 @@ class ChessWrapper extends React.Component {
 			white: game.white,
 			black: game.black,
 		})
+	}
+
+	handleDoubleLeftClick = () => {
+		this.state.game.reset()
+		this.setState({ fen: this.state.game.fen() })
+	}
+
+	//TODO, more effiecent man, and dont repeat
+	handleDoubleRightClick = () => {
+		// console.log(this.state.history, this.state.game.history())
+		this.handleMoveClick(this.state.history.length)
+	}
+
+	handleLeftClick = () => {
+		this.state.game.undo()
+		this.setState({ fen: this.state.game.fen() })
+	}
+
+	handleRightClick = () => {
+		let index = this.state.game.history().length
+		let move = this.state.history[index]
+		this.state.game.move(move)
+		this.setState({ fen: this.state.game.fen() })
 	}
 }
 

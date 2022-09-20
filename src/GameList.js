@@ -8,7 +8,7 @@ class GameList extends React.Component {
 				{
 					id: 101,
 					fen: "rnbqk2r/pppp1Qpp/5n2/2b1p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4",
-					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5', 'Nc6', 'Qxf7'],
+					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5', 'Nf6', 'Qxf7'],
 					white: {
 						name: "Drake W",
 						rating: 1054,
@@ -21,7 +21,7 @@ class GameList extends React.Component {
 				{
 					id: 102,
 					fen: "rnbqk2r/pppp1ppp/5n2/2b1p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4",
-					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5', 'Nc6'],
+					history: ['e4', 'e5', 'Bc4', 'Bc5', 'Qh5', 'Nf6'],
 					white: {
 						name: "Charles W",
 						rating: 1400
