@@ -17,10 +17,10 @@ class ChessWrapper extends React.Component {
 		super(props)
 		// console.log('ChessWrapper - constructor')
 		this.state = {
+			username: 'tiger415',
 			game: new Chess(),
 			fen: "start",
 			history: [],
-			chesscomGames: [],
 			white: {
 				name: "White Player",
 				username: null,
@@ -65,8 +65,28 @@ class ChessWrapper extends React.Component {
 							<h2>Black Info Container</h2>
 							<h4>{this.state.black.name || this.state.black.username} ({this.state.black.rating})</h4>
 						</div>
-						{/* Empty Space */}
-						<div style={{ border: "dotted" }} className="col-sm-4"></div>
+
+
+						{/* Search Space */}
+						<div style={{ border: "dotted" }} className="col-sm-4">
+							<div className="form-group form-row">
+								<label className="col-sm-4">Search username</label>
+								<input
+									type="text"
+									className="form-control"
+									value={this.state.username}
+									onChange={(event) => { 
+										this.setState({username: event.target.value})
+									}}
+								/>
+								<button 
+									className="btn btn-primary"
+									onClick={this.onSearchClick}
+								>
+									Search
+								</button>
+							</div>
+						</div>
 
 
 						{/* Chess Board */}
@@ -85,6 +105,7 @@ class ChessWrapper extends React.Component {
 							/>	
 						</div>
 
+
 						{/* Chess Notations */}
 						<div style={{ border: "dotted" }} className="col-sm-4">
 							<h2>Notations</h2>
@@ -94,11 +115,13 @@ class ChessWrapper extends React.Component {
 							/>
 						</div>
 
+
 						{/* White info */}
 						<div style={{ border: "dotted" }}  className="col-sm-8">
 							<h2>White Info Container</h2>
 							<h4>{this.state.white.name || this.state.white.username} ({this.state.white.rating})</h4>
 						</div>
+
 
 						{/* Arrows */}
 						<div style={{ border: "dotted" }}  className="col-sm-4">
@@ -134,6 +157,7 @@ class ChessWrapper extends React.Component {
 							</div>
 						</div>
 
+
 						{/* Game List */}
 						<div style={{ border: "dotted" }}  className="col-sm-12">
 							<h2>Game List</h2>
@@ -149,6 +173,11 @@ class ChessWrapper extends React.Component {
 				</div>
 			</>
 		)
+	}
+
+
+	onSearchClick = () => {
+		console.log(this.state)
 	}
 
 	//When user drops a piece, the move gets input into the chess instance
@@ -203,6 +232,7 @@ class ChessWrapper extends React.Component {
 		// this.state.game.reset()
 		let newGame = new Chess()		
 		newGame.loadPgn(game.pgn)
+		console.log(newGame.header())
 		// console.log(newGame.history())
 
 		// for (let i=0;i<game.history.length;i++) {

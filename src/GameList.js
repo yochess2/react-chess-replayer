@@ -64,7 +64,7 @@ class GameList extends React.Component {
 		this.state.api
 			.getPlayerCompleteMonthlyArchives('tiger415', 2022, 9)
 			.then((res) => {
-				console.log('        success!', res.body.games[0].rated)
+				console.log('        success!', res.body.games[0].end_time)
 				this.setState({ chesscomGames: res.body.games })
 			})
 	}
@@ -87,7 +87,7 @@ class GameList extends React.Component {
 		// console.log('    Game List - render')
 		return (
 			<div style={{ height: '520px', overflow: 'auto' }}>
-				{this.state.chesscomGames.map((game, index) => {
+				{this.state.chesscomGames.slice().reverse().map((game, index) => {
 					return (
 						<div 
 							key={index}>
@@ -96,7 +96,9 @@ class GameList extends React.Component {
 								className="hand-icon"
 								onClick={(event) => { this.onGameClick(event, index) }}>
 								Game {index+1} - {game.white.name || game.white.username} ({game.white.rating}) 
-								vs. {game.black.name || game.black.username} ({game.black.rating})
+								vs. {game.black.name || game.black.username} ({game.black.rating}) 
+								| {this.getDate(game.end_time)} | {this.getTime(game.end_time)}
+								| result
 							</span>
 							</h4>
 						</div>
@@ -109,6 +111,17 @@ class GameList extends React.Component {
 	onGameClick = (event, index) => {
 		let game = this.state.chesscomGames[index]
 		this.props.onGameClick(game)
+		console.log(game)
+	}
+
+	getDate = (d) => {
+		let date = new Date(+(d.toString() + '000')).toLocaleDateString()
+		return date
+	}
+
+	getTime = (t) => {
+		let time = new Date(+(t.toString() + '000')).toLocaleTimeString()
+		return time
 	}
 }
 
