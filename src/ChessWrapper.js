@@ -4,6 +4,7 @@ import { Chessboard } from "react-chessboard"
 
 // import ChessboardWrapper from "./ChessboardWrapper"
 import Notations from "./Notations"
+import GameList from "./GameList"
 
 class ChessWrapper extends React.Component {
 	constructor(props) {
@@ -13,6 +14,14 @@ class ChessWrapper extends React.Component {
 			game: new Chess(),
 			fen: "start",
 			history: [],
+			white: {
+				name: "White Player",
+				rating: null,
+			},
+			black: {
+				name: "Black Player",
+				rating: null,
+			},
 		}
 	}
 
@@ -21,7 +30,8 @@ class ChessWrapper extends React.Component {
 	// }
 
 	componentDidUpdate(prevProps, prevState) {
-		console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
+		// console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
+		console.log('ChessWrapper - ComponentDidUpdate')
 	}
 
 	// componentWillUnmount(prevProps, prevState) {
@@ -33,7 +43,7 @@ class ChessWrapper extends React.Component {
 	// }
 
 	render() {
-		// console.log("ChessWrapper - render", this.state.game.fen())
+		console.log("ChessWrapper - render", this.state.history)
 		return (
 			<>
 				<div style={{ border: "solid" }} className="container bg-secondary">
@@ -44,6 +54,7 @@ class ChessWrapper extends React.Component {
 						{/* Black info */}
 						<div style={{ border: "dotted" }} className="col-sm-8">
 							<h2>Black Info Container</h2>
+							<h4>{this.state.black.name} ({this.state.black.rating})</h4>
 						</div>
 						{/* Empty Space */}
 						<div style={{ border: "dotted" }} className="col-sm-4"></div>
@@ -72,6 +83,7 @@ class ChessWrapper extends React.Component {
 						{/* White info */}
 						<div style={{ border: "dotted" }}  className="col-sm-8">
 							<h2>White Info Container</h2>
+							<h4>{this.state.white.name} ({this.state.white.rating})</h4>
 						</div>
 						{/* Empty Space */}
 						<div style={{ border: "dotted" }}  className="col-sm-4"></div>
@@ -79,6 +91,9 @@ class ChessWrapper extends React.Component {
 						{/* Game List */}
 						<div style={{ border: "dotted" }}  className="col-sm-12">
 							<h2>Game List</h2>
+								<GameList 
+									onGameClick={this.handleGameClick}
+								/>
 						</div>
 
 
@@ -94,7 +109,6 @@ class ChessWrapper extends React.Component {
 	//  else the chess instance gets updated and fen's state changes 
 	//Returns: a value of true or false as required by the chessboard instance
 	handlePieceDrop = (sourceSquare, targetSquare, piece) => {		
-		let history
 		let moved = this.state.game.move({
 			from: sourceSquare, 
 			to: targetSquare
@@ -107,6 +121,9 @@ class ChessWrapper extends React.Component {
 		if (!moved) {
 			return false
 		}
+
+
+		let history
 		if (currentHistory.length >= notationHistory.length) {
 			history = this.state.game.history()
 		} else {
@@ -133,6 +150,21 @@ class ChessWrapper extends React.Component {
 			this.state.game.move(this.state.history[i])
 		}
 		this.setState({ fen: this.state.game.fen() })
+	}
+
+	handleGameClick = (game) => {
+		this.state.game.reset()
+
+		console.log(game)
+		for (let i=0;i<game.history.length-1;i++) {
+			this.state.game.move(game.history[i])
+		}
+		this.setState({ 
+			fen: game.fen,
+			history: game.history,
+			white: game.white,
+			black: game.black,
+		})
 	}
 }
 

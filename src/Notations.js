@@ -5,28 +5,29 @@ class Notations extends React.Component {
 		super(props)
 		// console.log('    Notations - constructor', props)
 		this.state = {
-			history: this.props.history
+			history: props.history
 		}
 	}
 
-	// componentDidMount() {
-	// 	console.log('    Notations - ComponentDidMount')
-	// }
+	componentDidMount() {
+		console.log('    Notations - ComponentDidMount')
+	}
 
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('    Notations - ComponentDidUpdate', prevProps, this.props)
+		console.log('    Notations - ComponentDidUpdate')
 	}
 
-	// componentWillUnmount(prevProps, prevState) {
-	// 	console.log('    Notations - ComponentWillUnmount')
-	// }
+	componentWillUnmount(prevProps, prevState) {
+		console.log('    Notations - ComponentWillUnmount')
+	}
 
-	// componentDidCatch(error, info) {
-	// 	console.log('    Notations - ComponentDidCatch')
-	// }
+	componentDidCatch(error, info) {
+		console.log('    Notations - ComponentDidCatch')
+	}
 
 	render() {
-		// console.log('    Notations - render', this.formatHistory(this.props.history))
+		console.log('    Notations - render', this.formatHistory(this.state.history))
 		return (
 			<div style={{ fontSize: '24px' }}>
 				<table>
@@ -46,6 +47,7 @@ class Notations extends React.Component {
 									</td>
 									<td>
 										<span 
+											className="hand-icon"
 											onClick={event => {
 												this.onNotationClick(event, 'white', index)
 											}}>
@@ -54,7 +56,8 @@ class Notations extends React.Component {
 									</td>
 									{move[2] && 
 									<td>
-										<span 
+										<span
+											className="hand-icon"
 											onClick={event => {
 												this.onNotationClick(event, 'black', index)
 											}}>
