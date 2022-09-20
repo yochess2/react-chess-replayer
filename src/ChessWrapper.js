@@ -15,7 +15,7 @@ import GameList from "./GameList"
 class ChessWrapper extends React.Component {
 	constructor(props) {
 		super(props)
-		// console.log('ChessWrapper - constructor', props)
+		// console.log('ChessWrapper - constructor')
 		this.state = {
 			game: new Chess(),
 			fen: "start",
@@ -40,19 +40,19 @@ class ChessWrapper extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('ChessWrapper - ComponentDidUpdate', prevState.fen, this.state.fen)
-		console.log('ChessWrapper - ComponentDidUpdate')
+		// console.log('ChessWrapper - ComponentDidUpdate')
 	}
 
-	// componentWillUnmount(prevProps, prevState) {
-	// 	console.log('ChessWrapper - ComponentWillUnmount')
-	// }
+	componentWillUnmount(prevProps, prevState) {
+		console.log('ChessWrapper - ComponentWillUnmount')
+	}
 
-	// componentDidCatch(error, info) {
-	// 	console.log('ChessWrapper - ComponentDidCatch')
-	// }
+	componentDidCatch(error, info) {
+		console.log('ChessWrapper - ComponentDidCatch')
+	}
 
 	render() {
-		console.log("ChessWrapper - render", this.state.history)
+		// console.log("ChessWrapper - render")
 		return (
 			<>
 				<div style={{ border: "solid" }} className="container bg-secondary">
@@ -76,6 +76,11 @@ class ChessWrapper extends React.Component {
 								position={this.state.fen}
 								showBoardNotation={true}
 								onPieceDrop={this.handlePieceDrop}
+								animationDuration={0}
+								areArrowsAllowed={true}
+								onSquareRightClick={() => {
+									// console.log('hi')
+								}}
 								
 							/>	
 						</div>
@@ -195,16 +200,17 @@ class ChessWrapper extends React.Component {
 	}
 
 	handleGameClick = (game) => {
-		this.state.game.reset()
-		let a = this.state.game.loadPgn(game.pgn)
-		console.log(this.state.game.history())
+		// this.state.game.reset()
+		let newGame = new Chess()		
+		newGame.loadPgn(game.pgn)
+		// console.log(newGame.history())
 
 		// for (let i=0;i<game.history.length;i++) {
 		// 	this.state.game.move(game.history[i])
 		// }
 		this.setState({ 
-			fen: game.fen,
-			history: this.state.game.history(),
+			fen: newGame.fen(),
+			history: newGame.history(),
 			white: game.white,
 			black: game.black,
 		})
@@ -232,6 +238,17 @@ class ChessWrapper extends React.Component {
 		this.state.game.move(move)
 		this.setState({ fen: this.state.game.fen() })
 	}
+
+	// onSquareRightClick(square) {
+	//     const colour = 'rgba(0, 0, 255, 0.4)';
+	//     setRightClickedSquares({
+	//       ...rightClickedSquares,
+	//       [square]:
+	//         rightClickedSquares[square] && rightClickedSquares[square].backgroundColor === colour
+	//           ? undefined
+	//           : { backgroundColor: colour }
+	//     });
+	//   }
 }
 
 export default ChessWrapper

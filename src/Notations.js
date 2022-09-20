@@ -3,14 +3,13 @@ import React from 'react'
 class Notations extends React.Component {
 	constructor(props) {
 		super(props)
-		// console.log('    Notations - constructor', props)
 		this.state = {
 			history: props.history
 		}
 	}
 
 	componentDidMount() {
-		console.log('    Notations - ComponentDidMount')
+		// console.log('    Notations - ComponentDidMount')
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -27,7 +26,7 @@ class Notations extends React.Component {
 	}
 
 	render() {
-		// console.log('    Notations - render', this.formatHistory(this.state.history))
+		// console.log('    Notations - render')
 		return (
 			<div style={{ fontSize: '24px', height: '520px', overflow: 'auto' }}>
 				<table>

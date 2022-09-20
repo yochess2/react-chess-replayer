@@ -4,6 +4,7 @@ import ChessWebAPI from 'chess-web-api'
 
 class GameList extends React.Component {
 	constructor(props) {
+		// console.log('Game List - constructor')
 		super(props)
 		this.state = {
 			api: new ChessWebAPI(),
@@ -70,7 +71,7 @@ class GameList extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('    Game List - ComponentDidUpdate', prevState, this.state)
-		console.log('    Game List - ComponentDidUpdate')
+		// console.log('    Game List - ComponentDidUpdate')
 	}
 
 	componentWillUnmount(prevProps, prevState) {
@@ -85,7 +86,7 @@ class GameList extends React.Component {
 	render() {
 		// console.log('    Game List - render')
 		return (
-			<>
+			<div style={{ height: '520px', overflow: 'auto' }}>
 				{this.state.chesscomGames.map((game, index) => {
 					return (
 						<div 
@@ -101,13 +102,12 @@ class GameList extends React.Component {
 						</div>
 					)
 				})}
-			</>
+			</div>
 		)
 	}
 
 	onGameClick = (event, index) => {
 		let game = this.state.chesscomGames[index]
-		console.log(game)
 		this.props.onGameClick(game)
 	}
 }
