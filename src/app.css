@@ -1,3 +1,11 @@
 .hand-icon {
 	cursor: pointer;
 }
+
+.highlight-clock {
+	background-color: #FFFF00;
+}
+
+.highlight-move {
+	background-color: #333333;
+}

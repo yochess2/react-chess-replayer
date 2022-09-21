@@ -15,6 +15,7 @@ class Notations extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('    Notations - ComponentDidUpdate', prevProps, this.props)
 		// console.log('    Notations - ComponentDidUpdate')
+		console.log(this.props)
 	}
 
 	componentWillUnmount(prevProps, prevState) {
@@ -26,7 +27,7 @@ class Notations extends React.Component {
 	}
 
 	render() {
-		// console.log('    Notations - render')
+		console.log('    Notations - render', this.props.ply)
 		return (
 			<div style={{ fontSize: '24px', height: '520px', overflow: 'auto' }}>
 				<table>
@@ -44,7 +45,7 @@ class Notations extends React.Component {
 									<td>
 										<span>{move[0]}</span>
 									</td>
-									<td>
+									<td className={(index)*2+1 === this.props.ply ? 'highlight-move':''}>
 										<span 
 											className="hand-icon"
 											onClick={event => {
@@ -54,7 +55,7 @@ class Notations extends React.Component {
 										</span>
 									</td>
 									{move[2] && 
-									<td>
+									<td className={(index+1)*2 === this.props.ply ? 'highlight-move':''}>
 										<span
 											className="hand-icon"
 											onClick={event => {

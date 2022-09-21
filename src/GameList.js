@@ -23,7 +23,7 @@ class GameList extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		console.log('    Game List - ComponentDidUpdate', this.props, prevProps, this.state, prevState)
+		// console.log('    Game List - ComponentDidUpdate', this.props, prevProps, this.state, prevState)
 		if (this.props.username !== prevProps.username) {
 			this.state.api
 				.getPlayerCompleteMonthlyArchives(this.props.username, 2022, 9)

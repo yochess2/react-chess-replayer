@@ -67,8 +67,19 @@ class ChessWrapper extends React.Component {
 						{/* Black info */}
 						<div style={{ border: "dotted" }} className="col-sm-8">
 							<h2>Black Info Container</h2>
-							<h4>{this.state.black.name || this.state.black.username} ({this.state.black.rating})</h4>
-							<h4>{this.state.black_time}</h4>
+							<div className="row">
+								<div className="col-sm-5" style={{ border: "dotted" }} >
+									<h4>
+										{this.state.black.name || this.state.black.username}
+										({this.state.black.rating})
+									</h4> 
+								</div>
+								<div className="col-sm-3" style={{ border: "dotted" }} >
+									<h4 className={this.state.game.turn() === 'b' ? 'highlight-clock' : ''}>
+										{this.state.white_time}
+									</h4>
+								</div>
+							</div>
 						</div>
 
 
@@ -117,15 +128,27 @@ class ChessWrapper extends React.Component {
 							<Notations 
 								history={this.state.history}
 								onMoveClick={this.handleMoveClick}
+								ply={this.state.game.history().length}
 							/>
 						</div>
 
 
 						{/* White info */}
-						<div style={{ border: "dotted" }}  className="col-sm-8">
+						<div style={{ border: "dotted" }} className="col-sm-8">
 							<h2>White Info Container</h2>
-							<h4>{this.state.white.name || this.state.white.username} ({this.state.white.rating})</h4>
-							<h4>{this.state.white_time}</h4>
+							<div className="row">
+								<div className="col-sm-5" style={{ border: "dotted" }} >
+									<h4>
+										{this.state.white.name || this.state.white.username}
+										({this.state.white.rating})
+									</h4> 
+								</div>
+								<div className="col-sm-3" style={{ border: "dotted" }} >
+									<h4 className={this.state.game.turn() === 'w' ? 'highlight-clock' : ''}>
+										{this.state.white_time}
+									</h4>
+								</div>
+							</div>
 						</div>
 
 
