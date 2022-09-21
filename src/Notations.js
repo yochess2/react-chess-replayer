@@ -4,18 +4,22 @@ class Notations extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			history: props.history
+			history: props.history,
+			scrolled: false,
 		}
 	}
 
 	componentDidMount() {
-		// console.log('    Notations - ComponentDidMount')
+		console.log('    Notations - ComponentDidMount')
+		document.addEventListener("scroll", () => {
+			this.setState({ scrolled: true })
+		})
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		// console.log('    Notations - ComponentDidUpdate', prevProps, this.props)
 		// console.log('    Notations - ComponentDidUpdate')
-		console.log(this.props)
+		// console.log(this.props)
 	}
 
 	componentWillUnmount(prevProps, prevState) {
@@ -27,7 +31,7 @@ class Notations extends React.Component {
 	}
 
 	render() {
-		console.log('    Notations - render', this.props.ply)
+		console.log('    Notations - render')
 		return (
 			<div style={{ fontSize: '24px', height: '520px', overflow: 'auto' }}>
 				<table>

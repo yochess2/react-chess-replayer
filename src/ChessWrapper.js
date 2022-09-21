@@ -128,7 +128,7 @@ class ChessWrapper extends React.Component {
 							<Notations 
 								history={this.state.history}
 								onMoveClick={this.handleMoveClick}
-								ply={this.state.game.history().length}
+								ply={this.state.game.history && this.state.game.history().length}
 							/>
 						</div>
 
@@ -294,7 +294,7 @@ class ChessWrapper extends React.Component {
 
 	//done, just invoke handlerightclick
 	handleDoubleRightClick = () => {
-		let length = this.state.game.history.length
+		let length = this.state.game.history().length
 		for (let index = length; index < this.state.timestamps.length; index++) {
 			this.handleRightClick()
 		}
@@ -332,8 +332,9 @@ class ChessWrapper extends React.Component {
 	handleRightClick = () => {
 		let index = this.state.game.history().length
 		let move = this.state.history[index]
+		console.log('move needs more efficiency: ', move)
 		this.state.game.move(move)
-		this.state.game.setComment(this.state.timestamps[index])
+
 		if (index === 0) {
 			this.setState({ 
 				fen: this.state.game.fen(), 
