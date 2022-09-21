@@ -64,7 +64,7 @@ class GameList extends React.Component {
 		this.state.api
 			.getPlayerCompleteMonthlyArchives('tiger415', 2022, 9)
 			.then((res) => {
-				console.log('        success!', res.body.games[0].end_time)
+				console.log('        success!', res.body.games[0])
 				this.setState({ chesscomGames: res.body.games })
 			})
 	}
@@ -98,7 +98,7 @@ class GameList extends React.Component {
 								Game {index+1} - {game.white.name || game.white.username} ({game.white.rating}) 
 								vs. {game.black.name || game.black.username} ({game.black.rating}) 
 								| {this.getDate(game.end_time)} | {this.getTime(game.end_time)}
-								| result
+								| {this.getResult(game.white.result, game.black.result, index, game)}
 							</span>
 							</h4>
 						</div>
@@ -109,9 +109,9 @@ class GameList extends React.Component {
 	}
 
 	onGameClick = (event, index) => {
-		let game = this.state.chesscomGames[index]
+		let game = this.state.chesscomGames.slice().reverse()[index]
 		this.props.onGameClick(game)
-		console.log(game)
+		// console.log(game)
 	}
 
 	getDate = (d) => {
@@ -122,6 +122,19 @@ class GameList extends React.Component {
 	getTime = (t) => {
 		let time = new Date(+(t.toString() + '000')).toLocaleTimeString()
 		return time
+	}
+
+	getResult = (white_result, black_result, index, game) => {
+		let result;
+		if (white_result === "win") {
+			result = "1-0"
+		} else if (black_result === "win") {
+			result = "0-1"
+		} else {
+			result = "1/2-1/2"
+		}
+		// console.log(white_result, black_result, index+1, result, game)
+		return result
 	}
 }
 

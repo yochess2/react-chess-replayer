@@ -21,6 +21,9 @@ class ChessWrapper extends React.Component {
 			game: new Chess(),
 			fen: "start",
 			history: [],
+			timestamps: [],
+			black_time: '',
+			white_time: '',
 			white: {
 				name: "White Player",
 				username: null,
@@ -64,6 +67,7 @@ class ChessWrapper extends React.Component {
 						<div style={{ border: "dotted" }} className="col-sm-8">
 							<h2>Black Info Container</h2>
 							<h4>{this.state.black.name || this.state.black.username} ({this.state.black.rating})</h4>
+							<h4>{this.state.black_time}</h4>
 						</div>
 
 
@@ -120,6 +124,7 @@ class ChessWrapper extends React.Component {
 						<div style={{ border: "dotted" }}  className="col-sm-8">
 							<h2>White Info Container</h2>
 							<h4>{this.state.white.name || this.state.white.username} ({this.state.white.rating})</h4>
+							<h4>{this.state.white_time}</h4>
 						</div>
 
 
@@ -175,7 +180,6 @@ class ChessWrapper extends React.Component {
 		)
 	}
 
-
 	onSearchClick = () => {
 		console.log(this.state)
 	}
@@ -198,7 +202,6 @@ class ChessWrapper extends React.Component {
 			return false
 		}
 
-
 		let history
 		if (currentHistory.length >= notationHistory.length) {
 			history = this.state.game.history()
@@ -216,57 +219,113 @@ class ChessWrapper extends React.Component {
 		return true
 	}
 
+	//Load game, set timer
+	//Odd on length is white, even on index is black
+	//Subtract 1 to get other side, just guess and check, don't think too hard!
+	//edge case are abortions, figure out logic on that later!
+	handleGameClick = (game) => {
+		let newGame = new Chess()
+		newGame.loadPgn(game.pgn)
+		let comments = newGame.getComments()
+		let totalPly = newGame.getComments().length
+
+		console.log(comments[totalPly-2].comment)
+		this.setState({ 
+			game: newGame,
+			fen: newGame.fen(),
+			history: newGame.history(),
+			white: game.white,
+			black: game.black,
+			timestamps: comments.map((obj) => obj.comment),
+			white_time: newGame.turn() === "w" ? comments[totalPly-2].comment : comments[totalPly-1].comment,
+			black_time: newGame.turn() === "w" ? comments[totalPly-1].comment : comments[totalPly-2].comment,
+		})
+	}
+
+	//done
 	//Method is invoked from Notations.onMoveClick()
 	//When invoked, it resets the game and board to that point in time,
 	//Notation is not affected
 	//Returns: Nothing
 	handleMoveClick = (moveNum) => {
 		this.state.game.reset()
-		for (let i=0;i<=moveNum;i++) {
-			this.state.game.move(this.state.history[i])
+		for (let index = 0; index <= moveNum; index++) {
+			this.handleRightClick()
 		}
-		this.setState({ fen: this.state.game.fen() })
+
 	}
 
-	handleGameClick = (game) => {
-		// this.state.game.reset()
-		let newGame = new Chess()		
-		newGame.loadPgn(game.pgn)
-		console.log(newGame.header())
-		// console.log(newGame.history())
-
-		// for (let i=0;i<game.history.length;i++) {
-		// 	this.state.game.move(game.history[i])
-		// }
+	//Done, just reset fen and timers, nothing else!
+	handleDoubleLeftClick = () => {
+		this.state.game.reset()
 		this.setState({ 
-			fen: newGame.fen(),
-			history: newGame.history(),
-			white: game.white,
-			black: game.black,
+			fen: this.state.game.fen(),
+			white_time: this.state.timestamps[0],
+			black_time: this.state.timestamps[0],
 		})
 	}
 
-	handleDoubleLeftClick = () => {
-		this.state.game.reset()
-		this.setState({ fen: this.state.game.fen() })
-	}
-
-	//TODO, more effiecent man, and dont repeat
+	//done, just invoke handlerightclick
 	handleDoubleRightClick = () => {
-		// console.log(this.state.history, this.state.game.history())
-		this.handleMoveClick(this.state.history.length)
+		let length = this.state.game.history.length
+		for (let index = length; index < this.state.timestamps.length; index++) {
+			this.handleRightClick()
+		}
 	}
 
+	//done, hard edge cases on 2 and 1
 	handleLeftClick = () => {
 		this.state.game.undo()
-		this.setState({ fen: this.state.game.fen() })
+		let comments = this.state.game.getComments()
+		let totalPly = 0
+
+		if (comments) {
+			totalPly = this.state.game.getComments().length
+		} 
+
+		if (totalPly === 1) {
+			this.setState({ 
+				fen: this.state.game.fen(), 
+				white_time: comments[0].comment,
+				black_time: comments[0].comment,
+			})
+		} else if (totalPly === 0) {
+			this.setState({ 
+				fen: this.state.game.fen(),
+			})
+		} else 
+		this.setState({ 
+			fen: this.state.game.fen(), 
+			white_time: this.state.game.turn() === "w" ? comments[totalPly-2].comment : comments[totalPly-1].comment,
+			black_time: this.state.game.turn() === "w" ? comments[totalPly-1].comment : comments[totalPly-2].comment,
+		})
 	}
 
+	//Done, edge cases are beginning and end
 	handleRightClick = () => {
 		let index = this.state.game.history().length
 		let move = this.state.history[index]
 		this.state.game.move(move)
-		this.setState({ fen: this.state.game.fen() })
+		this.state.game.setComment(this.state.timestamps[index])
+		if (index === 0) {
+			this.setState({ 
+				fen: this.state.game.fen(), 
+				white_time: this.state.timestamps[index],
+				black_time: this.state.timestamps[index],
+			})
+		} else if (index >= this.state.timestamps.length) {
+			this.setState({
+				fen: this.state.game.fen(),
+			})
+		}else {
+			this.setState({ 
+				fen: this.state.game.fen(),
+				white_time: this.state.game.turn() === "w" ? this.state.timestamps[index-1] : this.state.timestamps[index],
+				black_time: this.state.game.turn() === "w" ? this.state.timestamps[index] : this.state.timestamps[index-1],
+			})
+
+		}
+
 	}
 
 	// onSquareRightClick(square) {
