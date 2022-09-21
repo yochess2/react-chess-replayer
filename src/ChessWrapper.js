@@ -17,6 +17,7 @@ class ChessWrapper extends React.Component {
 		super(props)
 		// console.log('ChessWrapper - constructor')
 		this.state = {
+			formData: 'tiger415',
 			username: 'tiger415',
 			game: new Chess(),
 			fen: "start",
@@ -78,9 +79,9 @@ class ChessWrapper extends React.Component {
 								<input
 									type="text"
 									className="form-control"
-									value={this.state.username}
+									value={this.state.formData}
 									onChange={(event) => { 
-										this.setState({username: event.target.value})
+										this.setState({formData: event.target.value})
 									}}
 								/>
 								<button 
@@ -169,6 +170,7 @@ class ChessWrapper extends React.Component {
 								<GameList 
 									onGameClick={this.handleGameClick}
 									chesscomGames={this.state.chesscomGames}
+									username={this.state.username}
 								/>
 						</div>
 
@@ -181,7 +183,9 @@ class ChessWrapper extends React.Component {
 	}
 
 	onSearchClick = () => {
-		console.log(this.state)
+		this.setState({
+			username: this.state.formData 
+		})
 	}
 
 	//When user drops a piece, the move gets input into the chess instance
